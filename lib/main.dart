@@ -54,22 +54,23 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<Database> _database;
 
   void main() async {
-    _database = openDatabase(
-      // Set the path to the database. Note: Using the `join` function from the
-      // `path` package is best practice to ensure the path is correctly
-      // constructed for each platform.
-      join(await getDatabasesPath(), 'drivemate.db'),
-      onCreate: (db, version) {
-        // Run the CREATE TABLE statement on the database.
-        // TODO put an alert here to test backups
-        print("database created");
-        return db.execute(
-          "CREATE TABLE expenses(id INTEGER PRIMARY KEY, base64img TEXT, cost REAL);\n"
-              "CREATE TABLE shifts(starttime TEXT PRIMARY KEY, endtime TEXT, startodometer REAL, endodometer REAL)",
-        );
-      },
-      version: 1,
-    );
+    if (_database == null) {
+      _database = openDatabase(
+        // Set the path to the database. Note: Using the `join` function from the
+        // `path` package is best practice to ensure the path is correctly
+        // constructed for each platform.
+        join(await getDatabasesPath(), 'drivemate.db'),
+        onCreate: (db, version) {
+          // Run the CREATE TABLE statement on the database.
+          print("database created"); // Logging for testing backup things
+          return db.execute(
+            "CREATE TABLE expenses(id INTEGER PRIMARY KEY, base64img TEXT, cost REAL);\n"
+                "CREATE TABLE shifts(starttime TEXT PRIMARY KEY, endtime TEXT, startodometer REAL, endodometer REAL)",
+          );
+        },
+        version: 1,
+      );
+    }
   }
 
   void _newEntry() {
