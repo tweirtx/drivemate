@@ -3,6 +3,8 @@ import 'dart:async';
 
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_porter/sqflite_porter.dart';
+import 'package:share/share.dart';
 
 void main() {
   runApp(MyApp());
@@ -65,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
           print("database created"); // Logging for testing backup things
           return db.execute(
             "CREATE TABLE expenses(id INTEGER PRIMARY KEY, base64img TEXT, cost REAL);\n"
-                "CREATE TABLE shifts(starttime TEXT PRIMARY KEY, endtime TEXT, startodometer REAL, endodometer REAL)",
+                "CREATE TABLE shifts(starttime TEXT PRIMARY KEY, endtime TEXT, startodometer REAL, endodometer REAL);",
           );
         },
         version: 1,
@@ -78,6 +80,16 @@ class _MyHomePageState extends State<MyHomePage> {
         // TODO screen to record a new trip or expense
       _counter++;
     });
+  }
+
+  void _exportSpreadsheets() async {
+    Share.shareFiles([join(await getDatabasesPath(), "drivemate.db")]);
+    // print(await dbExportSql(await _database));
+  }
+
+  void _handleMenu(String choice) {
+    // make this actually do things when there are multiple options
+    _exportSpreadsheets();
   }
 
   @override
@@ -94,7 +106,19 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
-        // TODO: add settings menu to export spreadsheet
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            onSelected: _handleMenu,
+            itemBuilder: (BuildContext context) {
+              return {'Export Spreadsheets',}.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
