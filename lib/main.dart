@@ -65,10 +65,8 @@ class _MyHomePageState extends State<MyHomePage> {
         onCreate: (db, version) {
           // Run the CREATE TABLE statement on the database.
           print("database created"); // Logging for testing backup things
-          return db.execute(
-            "CREATE TABLE expenses(id INTEGER PRIMARY KEY, base64img TEXT, cost REAL);\n"
-                "CREATE TABLE shifts(starttime TEXT PRIMARY KEY, endtime TEXT, startodometer REAL, endodometer REAL);",
-          );
+          db.execute("CREATE TABLE shifts(starttime TEXT PRIMARY KEY, endtime TEXT, startodometer REAL, endodometer REAL);").whenComplete(() => null);
+          return db.execute("CREATE TABLE expenses(id INTEGER PRIMARY KEY, base64img TEXT, cost REAL);");
         },
         version: 1,
       );
