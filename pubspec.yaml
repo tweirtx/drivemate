@@ -31,6 +31,7 @@ dependencies:
       path: sqflite_porter
       version: '>=0.2.0'
   path:
+  share:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
