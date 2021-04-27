@@ -3,7 +3,6 @@ import 'dart:async';
 
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sqflite_porter/sqflite_porter.dart';
 import 'package:share/share.dart';
 
 void main() {
@@ -65,10 +64,8 @@ class _MyHomePageState extends State<MyHomePage> {
         onCreate: (db, version) {
           // Run the CREATE TABLE statement on the database.
           print("database created"); // Logging for testing backup things
-          return db.execute(
-            "CREATE TABLE expenses(id INTEGER PRIMARY KEY, base64img TEXT, cost REAL);\n"
-                "CREATE TABLE shifts(starttime TEXT PRIMARY KEY, endtime TEXT, startodometer REAL, endodometer REAL);",
-          );
+          db.execute("CREATE TABLE shifts(starttime TEXT PRIMARY KEY, endtime TEXT NULL, startodometer REAL, endodometer REAL NULL);").whenComplete(() => null);
+          return db.execute("CREATE TABLE expenses(id INTEGER PRIMARY KEY, base64img TEXT, cost REAL);");
         },
         version: 1,
       );
@@ -84,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _exportSpreadsheets() async {
     Share.shareFiles([join(await getDatabasesPath(), "drivemate.db")]);
-    // print(await dbExportSql(await _database));
+    // TODO actually export a spreadsheet (or give up and make it part of the backend)...sqflite_porter doesn't work
   }
 
   void _handleMenu(String choice) {
