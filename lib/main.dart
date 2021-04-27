@@ -3,7 +3,6 @@ import 'dart:async';
 
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sqflite_porter/sqflite_porter.dart';
 import 'package:share/share.dart';
 
 void main() {
